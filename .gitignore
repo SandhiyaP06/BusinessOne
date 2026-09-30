@@ -1,0 +1,34 @@
+# Dependencies & Build Output
+node_modules
+dist
+dist-ssr
+*.local
+
+# Backend runtime files
+backend/node_modules
+backend/dist
+backend/dev.db
+backend/dev.db-journal
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+!backend/.env.example
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor & OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+

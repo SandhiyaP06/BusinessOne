@@ -1,0 +1,599 @@
+/* ==========================================================================
+   ENTERPRISE APPLICATION / DOCKET TRACKING STYLES
+   Industrial Approval Portal - Single Window Clearance System
+   Clean Case-Management & Digital Workflow Aesthetics
+   ========================================================================== */
+
+.tracking-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5, 20px);
+}
+
+/* -------------------------------------------------------------
+   1. TOP COMPACT DOCKET SELECTOR STRIP
+   ------------------------------------------------------------- */
+.tracking-selector-strip {
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-subtle, #E2E8F0);
+  border-radius: var(--radius-lg, 8px);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.tracking-selector-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tracking-selector-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-heading, #0B2545);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tracking-select-dropdown {
+  padding: 6px 12px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-main, #0F172A);
+  background-color: var(--bg-surface, #FFFFFF);
+  border: 1px solid var(--border-strong, #CBD5E1);
+  border-radius: 6px;
+  min-width: 280px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.tracking-select-dropdown:focus {
+  border-color: #2563EB;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.tracking-selector-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* -------------------------------------------------------------
+   2. MAIN APPLICATION IDENTITY & STATUS HEADER CARD
+   ------------------------------------------------------------- */
+.tracking-header-card {
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-subtle, #E2E8F0);
+  border-radius: var(--radius-lg, 8px);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+}
+
+.tracking-header-body {
+  padding: 24px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+/* Left Side: Identity Hierarchy */
+.tracking-identity-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 0;
+  flex: 1;
+}
+
+.tracking-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background-color: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1D4E89;
+  flex-shrink: 0;
+}
+
+.tracking-identity-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.tracking-eyebrow-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tracking-id-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tracking-main-id {
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: #0B2545;
+  letter-spacing: -0.02em;
+  font-family: var(--font-family-mono, monospace);
+  line-height: 1.2;
+}
+
+.tracking-copy-button {
+  background: transparent;
+  border: 1px solid #E2E8F0;
+  border-radius: 4px;
+  padding: 3px 7px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.tracking-copy-button:hover {
+  background-color: #F1F5F9;
+  color: #0B2545;
+  border-color: #CBD5E1;
+}
+
+.tracking-business-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #1E293B;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.tracking-location-bar {
+  font-size: 0.8125rem;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.tracking-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tracking-internal-ref {
+  font-size: 0.6875rem;
+  color: #94A3B8;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-family: var(--font-family-mono, monospace);
+}
+
+/* Right Side: Status & Action Area */
+.tracking-status-area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.tracking-status-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.tracking-status-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #64748B;
+}
+
+.tracking-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 5px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.tracking-status-pill.under-review {
+  background-color: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  color: #1D4E89;
+}
+
+.tracking-status-pill.approved {
+  background-color: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  color: #065F46;
+}
+
+.tracking-status-pill.pending {
+  background-color: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #92400E;
+}
+
+.tracking-status-pill.rejected {
+  background-color: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+}
+
+.tracking-updated-tag {
+  font-size: 0.75rem;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tracking-action-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.tracking-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.tracking-action-btn.btn-primary-action {
+  background-color: #1D4E89;
+  border: 1px solid #1D4E89;
+  color: #FFFFFF;
+}
+
+.tracking-action-btn.btn-primary-action:hover {
+  background-color: #0B2545;
+  border-color: #0B2545;
+}
+
+.tracking-action-btn.btn-secondary-action {
+  background-color: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  color: #334155;
+}
+
+.tracking-action-btn.btn-secondary-action:hover {
+  background-color: #F8FAFC;
+  color: #0F172A;
+  border-color: #94A3B8;
+}
+
+/* -------------------------------------------------------------
+   3. CLEAN HORIZONTAL NAVIGATION TABS
+   ------------------------------------------------------------- */
+.tracking-tabs-bar {
+  display: flex;
+  gap: 32px;
+  padding: 0 28px;
+  border-top: 1px solid var(--border-subtle, #E2E8F0);
+  background-color: #FAFAFC;
+  overflow-x: auto;
+}
+
+.tracking-tab-button {
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 14px 0;
+  font-size: 0.84375rem;
+  font-weight: 600;
+  color: #64748B;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  outline: none;
+}
+
+.tracking-tab-button:hover {
+  color: #0B2545;
+}
+
+.tracking-tab-button.is-active {
+  color: #0B2545;
+  font-weight: 700;
+  border-bottom-color: #1D4E89;
+}
+
+.tracking-tab-button.is-active svg {
+  color: #1D4E89;
+}
+
+/* -------------------------------------------------------------
+   4. TAB CONTENT PANELS
+   ------------------------------------------------------------- */
+.tracking-tab-content {
+  padding: 24px 28px;
+}
+
+/* Timeline Layout */
+.tracking-timeline-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.tracking-timeline-connector {
+  position: absolute;
+  top: 18px;
+  bottom: 24px;
+  left: 17px;
+  width: 2px;
+  background-color: #E2E8F0;
+  z-index: 1;
+}
+
+.tracking-timeline-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.tracking-timeline-marker {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  transition: all 0.15s ease;
+}
+
+.tracking-timeline-marker.completed {
+  background-color: #ECFDF5;
+  border: 2px solid #059669;
+  color: #059669;
+}
+
+.tracking-timeline-marker.active {
+  background-color: #EFF6FF;
+  border: 2px solid #1D4E89;
+  color: #1D4E89;
+  box-shadow: 0 0 0 4px rgba(29, 78, 137, 0.12);
+}
+
+.tracking-timeline-marker.pending {
+  background-color: #FFFFFF;
+  border: 2px solid #CBD5E1;
+  color: #94A3B8;
+}
+
+.tracking-timeline-details {
+  flex: 1;
+  border-radius: 6px;
+  padding: 12px 16px;
+  border: 1px solid var(--border-subtle, #E2E8F0);
+  background-color: #FFFFFF;
+  transition: all 0.15s ease;
+}
+
+.tracking-timeline-step.is-active .tracking-timeline-details {
+  border-color: #BFDBFE;
+  background-color: #F8FAFC;
+  border-left: 3px solid #1D4E89;
+}
+
+.tracking-timeline-step.is-pending .tracking-timeline-details {
+  background-color: #FAFAFA;
+  border-color: #F1F5F9;
+  opacity: 0.85;
+}
+
+.tracking-step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tracking-step-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0B2545;
+}
+
+.tracking-step-time {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748B;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tracking-step-desc {
+  font-size: 0.8125rem;
+  color: #475569;
+  margin-top: 4px;
+  line-height: 1.45;
+}
+
+/* Parallel Routing Flow Panel */
+.tracking-routing-diagram {
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.tracking-routing-header-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #0B2545;
+  color: #FFFFFF;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 0.84375rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.tracking-routing-grid {
+  display: grid;
+  grid-templateColumns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  text-align: left;
+}
+
+.tracking-routing-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: all 0.15s ease;
+}
+
+.tracking-routing-card:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06);
+}
+
+/* Dossier Grid Panel */
+.tracking-dossier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.tracking-dossier-section {
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 16px;
+  background-color: #FFFFFF;
+}
+
+.tracking-dossier-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0B2545;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #F1F5F9;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tracking-dossier-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.8125rem;
+}
+
+.tracking-dossier-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tracking-dossier-row-label {
+  color: #64748B;
+  font-weight: 500;
+}
+
+.tracking-dossier-row-value {
+  color: #0F172A;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* -------------------------------------------------------------
+   5. RESPONSIVE BREAKPOINTS
+   ------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .tracking-header-body {
+    flex-direction: column;
+    padding: 18px;
+    gap: 18px;
+  }
+
+  .tracking-status-area {
+    align-items: flex-start;
+    width: 100%;
+    padding-top: 14px;
+    border-top: 1px solid #F1F5F9;
+  }
+
+  .tracking-status-block {
+    align-items: flex-start;
+  }
+
+  .tracking-tabs-bar {
+    padding: 0 18px;
+    gap: 20px;
+  }
+
+  .tracking-tab-content {
+    padding: 18px;
+  }
+
+  .tracking-select-dropdown {
+    width: 100%;
+    min-width: unset;
+  }
+}

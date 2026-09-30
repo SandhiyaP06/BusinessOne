@@ -1,0 +1,403 @@
+// Prisma Schema for Industrial Approval Portal (Phase 2 Backend)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // Can be switched to "postgresql" via DATABASE_URL
+  url      = env("DATABASE_URL")
+}
+
+// -------------------------------------------------------------
+// 1. USER & ROLE MODELS
+// -------------------------------------------------------------
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique // ENTREPRENEUR, DEPARTMENT_OFFICER, INSPECTOR, ADMIN
+  description String?
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("roles")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  phone        String?
+  passwordHash String
+  roleId       String
+  role         Role      @relation(fields: [roleId], references: [id])
+  designation  String?
+  departmentId String?   // Linked department for officers/inspectors
+  department   Department? @relation("DepartmentOfficers", fields: [departmentId], references: [id])
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  businesses            Business[]
+  documentsUploaded     Document[]             @relation("DocumentUploader")
+  validationsPerformed  DocumentValidation[]   @relation("DocumentValidator")
+  inspectionsAssigned   Inspection[]           @relation("AssignedInspector")
+  queriesRaised         Query[]                @relation("QueryRaiser")
+  queryResponses        QueryResponse[]        @relation("QueryResponder")
+  departmentAssignments ApplicationDepartment[] @relation("AssignedOfficer")
+  approvalsGranted      Approval[]             @relation("OfficerApprovals")
+  notifications         Notification[]
+  auditLogs             AuditLog[]
+
+  @@map("users")
+}
+
+// -------------------------------------------------------------
+// 2. BUSINESS MODEL
+// -------------------------------------------------------------
+
+model Business {
+  id            String        @id @default(uuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName  String
+  businessType  String        // Pvt Ltd, Public Ltd, LLP, Proprietorship, Partnership
+  industryType  String        // Aerospace, Pharmaceuticals, Renewable Energy, etc.
+  businessStage String?       // Proposed, Under Construction, Operational
+  projectSize   String        // MICRO, SMALL, MEDIUM, LARGE, MEGA_PROJECT
+  panNumber     String?
+  gstin         String?
+  location      String
+  district      String
+  state         String
+  pincode       String
+  description   String?
+  applications  Application[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("businesses")
+}
+
+// -------------------------------------------------------------
+// 3. APPLICATION MODEL
+// -------------------------------------------------------------
+
+model Application {
+  id                String                  @id @default(uuid())
+  applicationNumber String                  @unique // e.g. APP-2026-IND-04829
+  businessId        String
+  business          Business                @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  applicationType   String                  @default("COMPOSITE_CLEARANCE")
+  status            String                  @default("DRAFT") // DRAFT, SUBMITTED, UNDER_REVIEW, INSPECTION_PENDING, QUERY_RAISED, RESUBMISSION_REQUIRED, APPROVED, REJECTED
+  currentStage      String                  @default("DRAFT") // DRAFT, SCRUTINY, PARALLEL_DEPARTMENT_REVIEW, INSPECTION, FINAL_APPROVAL, COMPLETED
+  category          String                  @default("GREEN") // RED, ORANGE, GREEN, WHITE (CPCB Category)
+  investmentInLakhs Float                   @default(0)
+  expectedEmployment Int                    @default(0)
+  landAreaAcres     Float                   @default(0)
+  powerLoadKVA      Int                     @default(0)
+  waterLoadKLD      Int                     @default(0)
+  hasBoiler         Boolean                 @default(false)
+  hasHazardousChem  Boolean                 @default(false)
+  submittedAt       DateTime?
+  completedAt       DateTime?
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+
+  // Relational Modules
+  departments       ApplicationDepartment[]
+  documents         Document[]
+  inspections       Inspection[]
+  queries           Query[]
+  approvals         Approval[]
+  workflowStages    WorkflowStage[]
+  notifications     Notification[]
+  renewals          Renewal[]
+
+  @@map("applications")
+}
+
+// -------------------------------------------------------------
+// 4. DEPARTMENT MODEL
+// -------------------------------------------------------------
+
+model Department {
+  id                     String                  @id @default(uuid())
+  name                   String                  @unique
+  code                   String                  @unique // INDUSTRY_DEPARTMENT, POLLUTION_CONTROL_BOARD, FIRE_DEPARTMENT, OTHER_DEPARTMENT
+  shortCode              String                  @default("DIC")
+  description            String?
+  mandatedSlaDays        Int                     @default(21)
+  isActive               Boolean                 @default(true)
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+
+  // Relations
+  officers               User[]                  @relation("DepartmentOfficers")
+  approvalRequirements   ApprovalRequirement[]
+  applicationDepartments ApplicationDepartment[]
+  inspections            Inspection[]
+  queries                Query[]
+  approvals              Approval[]
+
+  @@map("departments")
+}
+
+// -------------------------------------------------------------
+// 5. APPROVAL REQUIREMENTS (Rule Engine)
+// -------------------------------------------------------------
+
+model ApprovalRequirement {
+  id                String     @id @default(uuid())
+  approvalName      String
+  departmentId      String
+  department        Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  industryType      String?    // Applicable sector or 'ALL'
+  category          String?    // RED, ORANGE, GREEN, WHITE or 'ALL'
+  projectSize       String?    // MICRO, SMALL, MEDIUM, LARGE, ALL
+  location          String?    // District/State filter or 'ALL'
+  minPowerKVA       Int?       @default(0)
+  minWaterKLD       Int?       @default(0)
+  minEmployment     Int?       @default(0)
+  requiresBoiler    Boolean?   @default(false)
+  requiresHazChem   Boolean?   @default(false)
+  description       String?
+  legalAct          String?
+  requiredDocuments String?    // JSON string array of document names
+  isMandatory       Boolean    @default(true)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  @@map("approval_requirements")
+}
+
+// -------------------------------------------------------------
+// 6. APPLICATION DEPARTMENT (Parallel Processing Link)
+// -------------------------------------------------------------
+
+model ApplicationDepartment {
+  id                String      @id @default(uuid())
+  applicationId     String
+  application       Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  departmentId      String
+  department        Department  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  assignedOfficerId String?
+  assignedOfficer   User?       @relation("AssignedOfficer", fields: [assignedOfficerId], references: [id])
+  status            String      @default("PENDING") // PENDING, IN_REVIEW, QUERY, APPROVED, REJECTED
+  assignedAt        DateTime    @default(now())
+  reviewedAt        DateTime?
+  remarks           String?
+  slaTargetDate     DateTime?
+  nocCertificateNo  String?
+
+  @@unique([applicationId, departmentId])
+  @@map("application_departments")
+}
+
+// -------------------------------------------------------------
+// 7. DOCUMENTS & VALIDATION
+// -------------------------------------------------------------
+
+model Document {
+  id            String               @id @default(uuid())
+  applicationId String
+  application   Application          @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  documentType  String               // LEGAL, TECHNICAL, ENVIRONMENTAL, SAFETY, FINANCIAL
+  name          String
+  fileName      String?
+  filePath      String?
+  mimeType      String?
+  fileSize      Int?                 // Size in bytes
+  uploadedById  String?
+  uploadedBy    User?                @relation("DocumentUploader", fields: [uploadedById], references: [id])
+  uploadedAt    DateTime?
+  status        String               @default("REQUIRED") // REQUIRED, UPLOADED, UNDER_VALIDATION, VERIFIED, REJECTED
+  validations   DocumentValidation[]
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  @@map("documents")
+}
+
+model DocumentValidation {
+  id                String    @id @default(uuid())
+  documentId        String
+  document          Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  validationStatus  String    // VERIFIED, REJECTED, REQUIRES_CLARIFICATION
+  validationMessage String?
+  validatedById     String
+  validatedBy       User      @relation("DocumentValidator", fields: [validatedById], references: [id])
+  validatedAt       DateTime  @default(now())
+
+  @@map("document_validations")
+}
+
+// -------------------------------------------------------------
+// 8. INSPECTIONS & CHECKLIST RESULTS
+// -------------------------------------------------------------
+
+model Inspection {
+  id            String            @id @default(uuid())
+  applicationId String
+  application   Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  departmentId  String
+  department    Department        @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  inspectorId   String?
+  inspector     User?             @relation("AssignedInspector", fields: [inspectorId], references: [id])
+  scheduledDate DateTime
+  completedDate DateTime?
+  location      String
+  status        String            @default("SCHEDULED") // SCHEDULED, ASSIGNED, COMPLETED, PASSED, REINSPECTION_REQUIRED
+  remarks       String?
+  result        InspectionResult?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@map("inspections")
+}
+
+model InspectionResult {
+  id           String     @id @default(uuid())
+  inspectionId String     @unique
+  inspection   Inspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  checklist    String     // JSON serialized checklist items with pass/fail
+  findings     String?
+  result       String     // PASSED, REINSPECT, REJECTED
+  evidencePath String?
+  submittedAt  DateTime   @default(now())
+
+  @@map("inspection_results")
+}
+
+// -------------------------------------------------------------
+// 9. QUERY SYSTEM
+// -------------------------------------------------------------
+
+model Query {
+  id            String          @id @default(uuid())
+  applicationId String
+  application   Application     @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  departmentId  String
+  department    Department      @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  raisedById    String
+  raisedBy      User            @relation("QueryRaiser", fields: [raisedById], references: [id])
+  queryText     String
+  dueDate       DateTime
+  status        String          @default("OPEN") // OPEN, RESPONDED, UNDER_REVIEW, RESOLVED
+  responses     QueryResponse[]
+  createdAt     DateTime        @default(now())
+  resolvedAt    DateTime?
+
+  @@map("queries")
+}
+
+model QueryResponse {
+  id           String   @id @default(uuid())
+  queryId      String
+  query        Query    @relation(fields: [queryId], references: [id], onDelete: Cascade)
+  responseText String
+  attachments  String?  // JSON serialized array of attached file paths
+  respondedById String
+  respondedBy  User     @relation("QueryResponder", fields: [respondedById], references: [id])
+  respondedAt  DateTime @default(now())
+
+  @@map("query_responses")
+}
+
+// -------------------------------------------------------------
+// 10. APPROVALS & DECISIONS
+// -------------------------------------------------------------
+
+model Approval {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  departmentId  String
+  department    Department  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  officerId     String
+  officer       User        @relation("OfficerApprovals", fields: [officerId], references: [id])
+  decision      String      // APPROVED, REJECTED
+  remarks       String?
+  licenceNumber String?
+  approvedAt    DateTime?
+  rejectedAt    DateTime?
+  createdAt     DateTime    @default(now())
+
+  @@map("approvals")
+}
+
+// -------------------------------------------------------------
+// 11. WORKFLOW STAGE HISTORY
+// -------------------------------------------------------------
+
+model WorkflowStage {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  stageName     String      // SUBMISSION, SCRUTINY, PARALLEL_ROUTING, INSPECTION, FINAL_CONSOLIDATION, CLEARED
+  status        String      @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED, FAILED
+  startedAt     DateTime    @default(now())
+  completedAt   DateTime?
+  remarks       String?
+
+  @@map("workflow_stages")
+}
+
+// -------------------------------------------------------------
+// 12. NOTIFICATIONS
+// -------------------------------------------------------------
+
+model Notification {
+  id            String       @id @default(uuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicationId String?
+  application   Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  type          String       // APPLICATION, DOCUMENT, INSPECTION, QUERY, APPROVAL, RENEWAL
+  title         String
+  message       String
+  isRead        Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+
+  @@map("notifications")
+}
+
+// -------------------------------------------------------------
+// 13. LICENCE RENEWAL
+// -------------------------------------------------------------
+
+model Renewal {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  licenceNumber String
+  licenceName   String      @default("Consolidated Operating Clearance")
+  issueDate     DateTime
+  expiryDate    DateTime
+  renewalStatus String      @default("ACTIVE") // ACTIVE, EXPIRING_SOON, EXPIRED, RENEWAL_SUBMITTED, RENEWED
+  renewedAt     DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("renewals")
+}
+
+// -------------------------------------------------------------
+// 14. AUDIT LOG
+// -------------------------------------------------------------
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action      String   // LOGIN, APPLICATION_CREATED, APPLICATION_SUBMITTED, DOCUMENT_UPLOADED, etc.
+  entityType  String   // APPLICATION, DOCUMENT, QUERY, INSPECTION, APPROVAL, RENEWAL, AUTH
+  entityId    String?
+  description String
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+
+  @@map("audit_logs")
+}

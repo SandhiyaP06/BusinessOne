@@ -1,0 +1,251 @@
+/* ==========================================================================
+   ENTERPRISE TOP NAVBAR STYLES
+   Industrial Approval Portal - Single Window Clearance System
+   ========================================================================== */
+
+.portal-navbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-fixed, 1030);
+  background-color: #FFFFFF;
+  border-bottom: 1px solid var(--border-subtle, #E2E8F0);
+  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  height: var(--navbar-height, 64px);
+  display: flex;
+  align-items: center;
+}
+
+.portal-navbar-inner {
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Left Brand Section */
+.navbar-brand-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.navbar-toggle-btn {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #0B2545;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.navbar-toggle-btn:hover {
+  background-color: #F1F5F9;
+  border-color: #E2E8F0;
+}
+
+/* Center Menu Navigation */
+.navbar-center-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  justify-content: center;
+}
+
+.navbar-nav-link {
+  background: transparent;
+  border: none;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.navbar-nav-link:hover {
+  color: #0B2545;
+  background-color: #F8FAFC;
+}
+
+.navbar-nav-link.is-active {
+  font-weight: 700;
+  color: #0B2545;
+  background-color: #EFF6FF;
+}
+
+/* Right Controls Section */
+.navbar-right-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.navbar-role-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: #0B2545;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.navbar-role-badge:hover {
+  background-color: #F1F5F9;
+  border-color: #CBD5E1;
+}
+
+.navbar-role-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #059669;
+}
+
+.navbar-icon-button {
+  position: relative;
+  padding: 7px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.navbar-icon-button:hover {
+  background-color: #F1F5F9;
+  color: #0B2545;
+}
+
+.navbar-notification-count {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #DC2626;
+  color: #FFFFFF;
+  font-size: 0.625rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #FFFFFF;
+}
+
+.navbar-profile-trigger {
+  background: none;
+  border: 1px solid #E2E8F0;
+  border-radius: 9999px;
+  padding: 2px 8px 2px 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  background-color: #FFFFFF;
+  transition: all 0.15s ease;
+}
+
+.navbar-profile-trigger:hover {
+  border-color: #CBD5E1;
+  background-color: #F8FAFC;
+}
+
+.navbar-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #0B2545;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.78125rem;
+}
+
+/* Dropdown styling */
+.navbar-dropdown-card {
+  position: absolute;
+  top: calc(100% + 6px);
+  z-index: var(--z-dropdown, 1000);
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  padding: 6px;
+  min-width: 210px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.navbar-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #334155;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.navbar-dropdown-item:hover {
+  background-color: #F1F5F9;
+  color: #0B2545;
+}
+
+.navbar-dropdown-divider {
+  height: 1px;
+  background-color: #E2E8F0;
+  margin: 4px 0;
+}
+
+@media (max-width: 900px) {
+  .navbar-center-menu {
+    display: none;
+  }
+}
+
+/* Language selector styles */
+.language-selector-dropdown-root {
+  flex-shrink: 0;
+}
+
+.language-selector-dropdown-root button:hover {
+  border-color: var(--color-primary-400, #3B82F6) !important;
+  background-color: var(--color-primary-50, #EFF6FF) !important;
+}
+
